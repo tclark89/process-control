@@ -30,24 +30,24 @@ xBarAndS <- function(data, runVar, response, sigma=3){
 
 
 
-xBarAndS <- function(data, runVar, response, sigma=3){
+# xBarAndS <- function(data, runVar, response, sigma=3){
+#
+#   # This function doesn't know how to handle the names...
+#
+#   dataSumm <- dplyr::group_by(data, {{runVar}})
+#
+#   dataSumm <- dplyr::summarise(
+#     dataSumm,
+#     "{{response}}_mean" := mean({{response}}, na.rm=T),
+#     "{{response}}_sd" := sd({{response}}, na.rm=T),
+#     "{{response}}_n" := length({{response}})
+#   )
+#
+#   dataSumm <- dplyr::ungroup(dataSumm)
+#
+#   return(dataSumm)
+#
+# }
 
-  # This function doesn't know how to handle the names...
-
-  dataSumm <- dplyr::group_by(data, {{runVar}})
-
-  dataSumm <- dplyr::summarise(
-    dataSumm,
-    "{{response}}_mean" := mean({{response}}, na.rm=T),
-    "{{response}}_sd" := sd({{response}}, na.rm=T),
-    "{{response}}_n" := length({{response}})
-  )
-
-  dataSumm <- dplyr::ungroup(dataSumm)
-
-  return(dataSumm)
-
-}
-
-lithograph |>
-  xBarAndS(CASSETTE, LINEWIDT)
+# lithograph |>
+  # xBarAndS(CASSETTE, LINEWIDT)
