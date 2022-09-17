@@ -1,13 +1,21 @@
 xBarAndS <- function(data, runVar, response, sigma=3){
 
-  # This function needs to keep variable names.
+  # Convert each column to a list, then fix the names
+  x_list <- list(eval(substitute(data$response), data, parent.frame()))
+  names(x_list) <- as.character(substitute(response))
+
+  by_list <- list(eval(substitute(runVar), data, parent.frame()))
+  names(by_list) <- as.character(substitute(runVar))
 
   # do.call is needed to expand the dataframe
   dataSumm <- do.call(
     data.frame,
     aggregate(
-      x=eval(substitute(response), data),
-      by=list(eval(substitute(runVar), data)),
+
+      x=x_list,
+
+      by=by_list,
+
       FUN= function(x) (
         c(mean=mean(x, na.rm=T),
           sd = sd(x, na.rm=T),
@@ -17,37 +25,14 @@ xBarAndS <- function(data, runVar, response, sigma=3){
     )
   )
 
-    dataSumm <- transform(
-      dataSumm,
-      processMean = mean(x.mean, na.rm=T),
-      processSD = mean(x.sd, na.rm=T)
-      )
+  # now find overall mean of response variable
+  dataSumm$processMean <-
+    mean(dataSumm[,paste0(substitute(response), ".mean")], na.rm=T)
 
-    return(dataSumm)
+  # and the mean of the standard deviations
+  dataSumm$processSD <-
+    mean(dataSumm[,paste0(substitute(response), ".sd")], na.rm=T)
+
+  return(dataSumm)
 
 }
-
-
-
-
-# xBarAndS <- function(data, runVar, response, sigma=3){
-#
-#   # This function doesn't know how to handle the names...
-#
-#   dataSumm <- dplyr::group_by(data, {{runVar}})
-#
-#   dataSumm <- dplyr::summarise(
-#     dataSumm,
-#     "{{response}}_mean" := mean({{response}}, na.rm=T),
-#     "{{response}}_sd" := sd({{response}}, na.rm=T),
-#     "{{response}}_n" := length({{response}})
-#   )
-#
-#   dataSumm <- dplyr::ungroup(dataSumm)
-#
-#   return(dataSumm)
-#
-# }
-
-# lithograph |>
-  # xBarAndS(CASSETTE, LINEWIDT)
