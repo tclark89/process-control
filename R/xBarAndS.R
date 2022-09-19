@@ -33,6 +33,38 @@ xBarAndS <- function(data, runVar, response, sigma=3){
   dataSumm$processSD <-
     mean(dataSumm[,paste0(substitute(response), ".sd")], na.rm=T)
 
+
+
+  # x-Bar Control Limit
+  xBarCL <- sigma * dataSumm$processSD /
+    (c4(dataSumm[,paste0(substitute(response), ".count")]) *
+       sqrt(dataSumm[,paste0(substitute(response), ".count")]))
+
+  # Upper Control Limit (X-Bar Chart)
+  dataSumm$xBar.UCL <- dataSumm$processMean + xBarCL
+
+  # Lower Control Limit (X-Bar Chart)
+  dataSumm$xBar.LCL <- dataSumm$processMean - xBarCL
+
+
+
+  # S Control Limit
+  sCL <- sigma * dataSumm$processSD /
+    (
+      c4(dataSumm[,paste0(substitute(response), ".count")]) *
+       sqrt(
+         1 - c4(dataSumm[,paste0(substitute(response), ".count")])^2
+         )
+     )
+
+  # Upper Control Limit (X-Bar Chart)
+  dataSumm$s.UCL <- dataSumm$processSD + sCL
+
+  # Lower Control Limit (X-Bar Chart)
+  dataSumm$s.LCL <- dataSumm$processSD - sCL
+
+
   return(dataSumm)
+
 
 }
